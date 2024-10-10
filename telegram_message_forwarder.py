@@ -104,13 +104,14 @@ async def handler(update:events.NewMessage, client:TelegramClient, destination_i
     message_id = telethon_utils.get_message_id(update.message)
     source = update.message.peer_id
             
-    logger.debug(f"New message with id: {message_id} received from chat '{source}'")
+    logger.info(f"New message with id: {message_id} received from chat '{source}'")
     
     try:
-        await client.send_message(destination_id, update.message)
+        message = await client.send_message(destination_id, update.message)
     except Exception as e:
         logger.error("The message cannot be sent, error: {}".format(e))
-        
+    else:
+        logger.info(f"Sent message with id: {message.id} to the chat '{message.peer_id}'")
 
 async def initialize_handler(client: TelegramClient, destination, targets):    
     logger.info('The intercepted messages will be sent to chat with id: {:>14} - title: "{}"'.format(
